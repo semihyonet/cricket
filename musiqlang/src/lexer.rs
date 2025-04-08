@@ -1,4 +1,6 @@
-#[derive(Logos, Debug, PartialEq)]
+use logos::Logos;
+
+#[derive(Logos, Debug, PartialEq, Clone)]
 pub enum Token {
     #[token("Instrument")]
     Instrument,
@@ -16,12 +18,10 @@ pub enum Token {
     MidiPath,
     #[token("return")]
     Return,
-    #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*")]
-    Identifier,
+    //    #[regex(r"[A-G][#b]?[m]?")]
+    //    Chord,
     #[regex(r"[0-9]+")]
     Number,
-    #[regex(r"[A-G][#b]?[m]?")] // Note names like Am, G, A#
-    Note,
     #[token(":")]
     Colon,
     #[token("(")]
@@ -36,9 +36,29 @@ pub enum Token {
     Plus,
     #[token("=")]
     Equals,
-    #[token("\n")]
-    Newline,
+    #[token(".")]
+    Dot,
+    #[token(",")]
+    Comma,
+    #[token("#")]
+    Hash,
+    #[regex(r"[ \t\n\r\f]+", logos::skip)]
     #[error]
-    #[regex(r"[ \t\r\f]+", logos::skip)]
     Error,
+    #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*")]
+    Identifier,
 }
+
+pub fn tokenize(source: &str) -> Vec<(Token, String)> {
+    Token::lexer(source)
+        .spanned()
+        .filter_map(|(tok, span)| {
+            if tok != Token::Error {
+                Some((tok, source[span].to_string()))
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+

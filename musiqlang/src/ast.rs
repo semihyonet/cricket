@@ -1,37 +1,44 @@
-pub enum Statement {
-    InstrumentDef(Instrument),
-    PatternDef(Pattern),
-    SectionDef(Section),
-    SongDef(Song),
-}
-
+#[derive(Debug)]
 pub struct Instrument {
-    name: String,
-    type_: String,
-    midi_path: String,
+    pub name: String,
+    pub type_: String,
+    pub midi_path: String,
 }
 
-pub struct Pattern {
-    name: String,
-    events: Vec<PatternEvent>,
-}
-
+#[derive(Debug)]
 pub enum PatternEvent {
-    Note { note: String, length: (u8, u8) },
-    Wait { length: (u8, u8) },
+    Note { chord: String, duration: (u8, u8) },
+    Wait { duration: (u8, u8) },
 }
 
-pub struct Section {
-    name: String,
-    channels: Vec<Channel>,
+#[derive(Debug)]
+pub struct Pattern {
+    pub name: String,
+    pub events: Vec<PatternEvent>,
 }
 
+#[derive(Debug)]
 pub struct Channel {
-    name: String,
-    calls: Vec<String>,
+    pub name: String,
+    pub pattern_calls: Vec<String>,
 }
 
+#[derive(Debug)]
+pub struct Section {
+    pub name: String,
+    pub channels: Vec<Channel>,
+}
+
+#[derive(Debug)]
 pub struct Song {
-    name: String,
-    entry_section: String,
+    pub name: String,
+    pub entry_section: String,
+}
+
+#[derive(Debug)]
+pub enum TopLevel {
+    Instrument(Instrument),
+    Pattern(Pattern),
+    Section(Section),
+    Song(Song),
 }
