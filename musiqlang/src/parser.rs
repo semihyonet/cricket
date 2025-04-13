@@ -154,11 +154,21 @@ impl Parser {
             self.expect(Token::Colon, stringify!("Section-channel").to_string());
 
             let mut calls = vec![];
-            while let Some(Token::Identifier) = self.peek() {
+
+            self.expect(Token::Return, stringify!("Section-channel").to_string());
+
+            calls.push(self.expect(Token::Identifier, stringify!("Section-channel").to_string()));
+            self.expect(Token::LParen, stringify!("Section-channel").to_string());
+            // We might have some parameters here
+            self.expect(Token::RParen, stringify!("Section-channel").to_string());
+
+            while let Some(Token::Plus) = self.peek() {
+                self.expect(Token::Plus, stringify!("Section-channel").to_string());
                 calls.push(
                     self.expect(Token::Identifier, stringify!("Section-channel").to_string()),
                 );
                 self.expect(Token::LParen, stringify!("Section-channel").to_string());
+                // We might have some parameters here
                 self.expect(Token::RParen, stringify!("Section-channel").to_string());
             }
 
@@ -176,12 +186,23 @@ impl Parser {
         let name = self.expect(Token::Identifier, stringify!("song").to_string());
         self.expect(Token::Colon, stringify!("song").to_string());
         self.expect(Token::Return, stringify!("song").to_string());
-        let section = self.expect(Token::Identifier, stringify!("song").to_string());
+
+        let mut sections = vec![];
+        sections.push(self.expect(Token::Identifier, stringify!("song").to_string()));
         self.expect(Token::LParen, stringify!("song").to_string());
+        // We might have some parameters here
         self.expect(Token::RParen, stringify!("song").to_string());
+        while let Some(Token::Plus) = self.peek() {
+            self.expect(Token::Plus, stringify!("song").to_string());
+            sections.push(self.expect(Token::Identifier, stringify!("song").to_string()));
+            self.expect(Token::LParen, stringify!("song").to_string());
+            // We might have some parameters here
+            self.expect(Token::RParen, stringify!("song").to_string());
+        }
+
         TopLevel::Song(Song {
             name,
-            entry_section: section,
+            entry_sections: sections,
         })
     }
 }
