@@ -1,8 +1,3 @@
-
-
-
-
-
 Instrument instrument_xyz:
 	type: Strings
 	midi_path: xyz
@@ -12,33 +7,8 @@ Pattern intro():
 
 Section Intro:
 	Channel name_a:
-		intro()
+		return intro()
 
 Song HotlineBling: 
-	return Intro()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return Intro() + Intro()

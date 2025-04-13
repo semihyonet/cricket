@@ -1,0 +1,27 @@
+Instrument instrument_xyz:
+	type: Strings
+	midi_path: xyz
+
+Pattern intro(): 
+	return [1:8] Note(Am) + [7:16] Note(Bm)
+
+Pattern intro2(): 
+	return [1:8] Note(Am) + [7:16] Note(Bm)
+
+Pattern intro3(): 
+	return [1:8] Note(Am) + [7:16] Note(Bm)
+
+Pattern intro4(): 
+	return [1:8] Note(Am) + [7:16] Note(Bm)
+
+Section Intro:
+	Channel name_a:
+		return intro() + intro2() + intro3()
+	Channel name_b:
+		return intro1()
+	Channel name_c:
+		return intro2()
+	Channel name_d:
+		return intro3()
+
+
