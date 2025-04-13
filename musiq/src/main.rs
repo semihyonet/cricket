@@ -1,5 +1,6 @@
 use musiqlang::lexer;
 use musiqlang::parser::Parser;
+use musiqlang::semantic::Semantic;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -11,4 +12,9 @@ fn main() {
     let ast = parser.parse();
 
     println!("{:#?}", ast);
+
+    let mut semantic_analysis = Semantic::new(ast);
+    let _ = semantic_analysis.analyze();
+
+    println!("Worked")
 }
