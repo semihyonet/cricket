@@ -1,38 +1,38 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Instrument {
     pub name: String,
     pub type_: String,
     pub midi_path: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum PatternEvent {
     Note { chord: String, duration: (u8, u8) },
     Wait { duration: (u8, u8) },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Pattern {
     pub name: String,
     pub events: Vec<PatternEvent>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Channel {
     pub name: String,
     pub pattern_calls: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Section {
     pub name: String,
     pub channels: Vec<Channel>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Song {
     pub name: String,
-    pub entry_section: String,
+    pub entry_sections: Vec<String>,
 }
 
 #[derive(Debug)]
