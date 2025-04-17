@@ -1,6 +1,6 @@
-use musiqlang::lexer;
-use musiqlang::parser::Parser;
-use musiqlang::semantic::Semantic;
+use cricket::lexer;
+use cricket::parser::Parser;
+use cricket::semantic::Semantic;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();

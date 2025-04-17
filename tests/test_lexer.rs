@@ -1,8 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use musiqlang::lexer::{Token, tokenize};
-
-    use super::*;
+    use cricket::lexer::{Token, tokenize};
 
     #[test]
     fn test_basic_tokenization() {
