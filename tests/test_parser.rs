@@ -1,12 +1,10 @@
 #[cfg(test)]
 mod tests {
-    use musiqlang::{
+    use cricket::{
         ast::TopLevel,
         lexer::{self, Token},
         parser::Parser,
     };
-
-    use super::*;
 
     #[test]
     fn test_parse_instrument() {

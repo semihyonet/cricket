@@ -1,6 +1,6 @@
 // tests/integration.rs
 
-use musiqlang::{lexer, parser::Parser};
+use cricket::{lexer, parser::Parser};
 
 #[test]
 fn test_full_song_flow() {

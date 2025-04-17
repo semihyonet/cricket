@@ -1,7 +1,7 @@
 [package]
-name = "musiq"
+name = "cricket_cli"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-musiqlang = {path="../musiqlang"}
+cricket = {path="../"}
