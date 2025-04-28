@@ -2,6 +2,7 @@ use cricket::lexer;
 use cricket::midigen::MidiGen;
 use cricket::parser::Parser;
 use cricket::semantic::Semantic;
+use cricket::soundgen::render_midi_to_wav;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -21,4 +22,7 @@ fn main() {
 
     let mut midigen = MidiGen::new(&ast);
     let results = midigen.generate();
+    for result in results.iter() {
+        render_midi_to_wav(result, &args[2]).unwrap();
+    }
 }
