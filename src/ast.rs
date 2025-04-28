@@ -35,7 +35,7 @@ pub struct Song {
     pub entry_sections: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum TopLevel {
     Instrument(Instrument),
     Pattern(Pattern),
