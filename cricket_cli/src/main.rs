@@ -1,4 +1,5 @@
 use cricket::lexer;
+use cricket::midigen::MidiGen;
 use cricket::parser::Parser;
 use cricket::semantic::Semantic;
 
@@ -13,8 +14,11 @@ fn main() {
 
     println!("{:#?}", ast);
 
-    let mut semantic_analysis = Semantic::new(ast);
+    let mut semantic_analysis = Semantic::new(ast.clone());
     let _ = semantic_analysis.analyze();
 
-    println!("Worked")
+    println!("Worked");
+
+    let mut midigen = MidiGen::new(&ast);
+    let results = midigen.generate();
 }
