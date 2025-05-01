@@ -12,7 +12,7 @@ fn strip_mid_extension(filename: String) -> String {
 pub fn render_midi_to_wav(
     midi_path: &str,
     soundfont_path: &str,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<String, Box<dyn std::error::Error>> {
     let file_name = strip_mid_extension(String::from(midi_path));
     let wav_path = format!("{}.wav", file_name);
     print!("{:?} {:?} {:?}", midi_path, wav_path, soundfont_path);
@@ -28,7 +28,7 @@ pub fn render_midi_to_wav(
         .arg(soundfont_path)
         .arg(midi_path)
         .arg("-F") // output to file
-        .arg(wav_path)
+        .arg(&wav_path)
         .arg("-r")
         .arg("44100") // sample rate
         .status()?;
@@ -37,7 +37,7 @@ pub fn render_midi_to_wav(
         return Err("Failed to render MIDI to WAV using FluidSynth".into());
     }
 
-    Ok(())
+    Ok(wav_path)
 }
 
 #[cfg(test)]
