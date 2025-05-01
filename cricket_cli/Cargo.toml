@@ -5,6 +5,12 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.5.37", features = ["derive"] }
-cricket = {path="../"}
+cricket = { path = "../" }
 env_logger = "0.11.8"
 log = "0.4.27"
+
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "2"
+tempfile = "3"
