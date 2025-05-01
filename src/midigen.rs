@@ -251,3 +251,126 @@ fn parse_chord(name: &str) -> Option<Vec<u8>> {
         vec![root_midi, root_midi + 4, root_midi + 7] // major triad
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn create_test_ast() -> Vec<TopLevel> {
+        vec![
+            TopLevel::Instrument(Instrument {
+                midi_path: "midipath".to_string(),
+                type_: "guitar".to_string(),
+                name: "Piano".to_string(),
+            }),
+            TopLevel::Pattern(Pattern {
+                name: "Pattern1".to_string(),
+                events: vec![
+                    PatternEvent::Note {
+                        chord: "C".to_string(),
+                        duration: (0, 1),
+                    },
+                    PatternEvent::Wait { duration: (1, 2) },
+                ],
+            }),
+            TopLevel::Section(Section {
+                name: "Section1".to_string(),
+                channels: vec![Channel {
+                    name: "x".to_string(),
+                    pattern_calls: vec!["Pattern1".to_string()],
+                }],
+            }),
+            TopLevel::Song(Song {
+                name: "Song1".to_string(),
+                entry_sections: vec!["Section1".to_string()],
+            }),
+        ]
+    }
+
+    #[test]
+    fn test_chord_to_midi_events_major() {
+        let events = chord_to_midi_events("C", 0, 480, 100, 0);
+        assert_eq!(events.len(), 6); // 3 NoteOn + 3 NoteOff
+
+        if let TrackEventKind::Midi { channel, message } = events[0].kind {
+            match message {
+                MidiMessage::NoteOn { key, vel } => {
+                    assert_eq!(key.as_int(), 60); // C note
+                    assert_eq!(vel.as_int(), 100);
+                }
+                _ => panic!("Expected NoteOn"),
+            }
+            assert_eq!(channel.as_int(), 0);
+        }
+    }
+
+    #[test]
+    fn test_chord_to_midi_events_minor() {
+        let events = chord_to_midi_events("Am", 0, 480, 100, 0);
+        assert_eq!(events.len(), 6); // 3 NoteOn + 3 NoteOff
+        if let TrackEventKind::Midi { message, .. } = events[0].kind {
+            match message {
+                MidiMessage::NoteOn { key, .. } => {
+                    assert_eq!(key.as_int(), 69); // A note
+                }
+                _ => panic!("Expected NoteOn"),
+            }
+        }
+    }
+
+    #[test]
+    fn test_parse_chord_major() {
+        let notes = parse_chord("C").unwrap();
+        assert_eq!(notes, vec![60, 64, 67]);
+    }
+
+    #[test]
+    fn test_parse_chord_minor() {
+        let notes = parse_chord("Am").unwrap();
+        assert_eq!(notes, vec![69, 72, 76]);
+    }
+
+    #[test]
+    fn test_parse_chord_invalid() {
+        let notes = parse_chord("H"); // H is not a valid note
+        assert!(notes.is_none());
+    }
+
+    #[test]
+    fn test_midigen_new() {
+        let ast = create_test_ast();
+        let midigen = MidiGen::new(&ast);
+
+        assert_eq!(midigen.songs.len(), 1);
+        assert_eq!(midigen.sections.len(), 1);
+        assert_eq!(midigen.instruments.len(), 1);
+        assert_eq!(midigen.patterns.len(), 1);
+    }
+
+    #[test]
+    fn test_midigen_generate_song() {
+        let ast = create_test_ast();
+        let mut midigen = MidiGen::new(&ast);
+
+        let result = midigen.generate_song(&"Song1".to_string());
+        assert!(result.is_ok());
+
+        let file_name = result.unwrap();
+        assert!(file_name.ends_with(".mid"));
+
+        let _ = std::fs::remove_file(file_name);
+    }
+
+    #[test]
+    fn test_midigen_generate() {
+        let ast = create_test_ast();
+        let mut midigen = MidiGen::new(&ast);
+
+        let songs = midigen.generate();
+        assert_eq!(songs.len(), 1);
+
+        let file_name = &songs[0];
+        assert!(file_name.ends_with(".mid"));
+
+        let _ = std::fs::remove_file(file_name);
+    }
+}
